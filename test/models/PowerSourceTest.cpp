@@ -3,14 +3,16 @@
 #include <cmath>
 #include <numbers>
 
+#include "models/BaseSystem.hpp"
 #include "models/PowerSource.hpp"
 
 using namespace powersim::models;
 
 class PowerSourceTest : public ::testing::Test {
  protected:
-  PowerSource gridSource{"KEPCO_154kV", 154.0, 1000.0, 30.0};
+  void SetUp() override { BaseSystem::instance().setBase(60.0, 100.0); }
 
+  PowerSource gridSource{"KEPCO_154kV", 154.0, 1000.0, 30.0};
   PowerSource infiniteBus{"Infinite_Bus", 22.9, 0.0, 0.0};
 };
 
@@ -24,27 +26,24 @@ TEST_F(PowerSourceTest, CalculatesPhasorVoltageCorrectly) {
   EXPECT_DOUBLE_EQ(phasor.imag(), v_phase * std::sin(radians));
 }
 
-TEST_F(PowerSourceTest, CalculatesSourceImpedanceOhm) {
-  auto z_ohm = gridSource.getSourceImpedanceOhm();
+TEST_F(PowerSourceTest, CalculatesImpedanceCorrectly) {
+  auto z = gridSource.getImpedance();
 
-  EXPECT_DOUBLE_EQ(z_ohm.real(), 0.0);
-  EXPECT_DOUBLE_EQ(z_ohm.imag(), 23.716);
+  EXPECT_DOUBLE_EQ(z.real(), 0.0);
+  EXPECT_DOUBLE_EQ(z.imag(), 237.16);
 }
 
-TEST_F(PowerSourceTest, CalculatesPercentImpedance) {
-  double baseMVA = 100.0;
-  auto percent_z = gridSource.getPercentImpedance(baseMVA);
+TEST_F(PowerSourceTest, CalculatesPercentImpedanceUsingSystemBase) {
+  auto percent_z = gridSource.getPercentImpedance();
 
   EXPECT_DOUBLE_EQ(percent_z.real(), 0.0);
   EXPECT_DOUBLE_EQ(percent_z.imag(), 10.0);
 }
 
 TEST_F(PowerSourceTest, HandlesInfiniteBusImpedance) {
-  auto z_ohm = infiniteBus.getSourceImpedanceOhm();
-  auto percent_z = infiniteBus.getPercentImpedance(100.0);
+  auto z = infiniteBus.getImpedance();
+  auto percent_z = infiniteBus.getPercentImpedance();
 
-  EXPECT_DOUBLE_EQ(z_ohm.real(), 0.0);
-  EXPECT_DOUBLE_EQ(z_ohm.imag(), 0.0);
-  EXPECT_DOUBLE_EQ(percent_z.real(), 0.0);
+  EXPECT_DOUBLE_EQ(z.imag(), 0.0);
   EXPECT_DOUBLE_EQ(percent_z.imag(), 0.0);
 }

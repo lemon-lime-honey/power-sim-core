@@ -2,17 +2,20 @@
 
 #include <numbers>
 
+#include "models/BaseSystem.hpp"
 #include "models/Line.hpp"
 
 using namespace powersim::models;
 
 class LineTest : public ::testing::Test {
  protected:
+  void SetUp() override { BaseSystem::instance().setBase(60.0, 100.0); }
+
   Line testLine{"TL_01", 1, 2, 0.1, 0.01, 0.0, 1e-6};
 };
 
-TEST_F(LineTest, CalculatesImpedanceAt60Hz) {
-  auto z = testLine.getImpedance(60.0);
+TEST_F(LineTest, CalculatesImpedanceUsingSystemFrequency) {
+  auto z = testLine.getImpedance();
 
   double expected_x = 2.0 * std::numbers::pi * 60.0 * 0.01;
 
@@ -20,8 +23,8 @@ TEST_F(LineTest, CalculatesImpedanceAt60Hz) {
   EXPECT_NEAR(z.imag(), expected_x, 1e-6);
 }
 
-TEST_F(LineTest, CalculatesAdmittanceAt60Hz) {
-  auto y = testLine.getAdmittance(60.0);
+TEST_F(LineTest, CalculatesAdmittanceUsingSystemFrequency) {
+  auto y = testLine.getAdmittance();
 
   double expected_b = 2.0 * std::numbers::pi * 60.0 * 1e-6;
 
