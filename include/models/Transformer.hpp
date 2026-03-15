@@ -3,7 +3,10 @@
 #include <string>
 #include <utility>
 
+#include "BaseSystem.hpp"
+
 namespace powersim::models {
+
 class Transformer {
  public:
   Transformer(std::string name, int primaryBus, int secondaryBus,
@@ -17,9 +20,18 @@ class Transformer {
         secondaryVoltage_(secondaryVoltage),
         percentImpedance_(percentImpedance) {}
 
-  std::complex<double> getPercentImpedance(double baseMva) const {
+  std::complex<double> getImpedance() const {
     if (ratedPower_ <= 0.0) return {0.0, 0.0};
-    return percentImpedance_ * (baseMva / ratedPower_);
+    double z_base_tx =
+        BaseSystem::instance().getBaseImpedance(primaryVoltage_, ratedPower_);
+    return (percentImpedance_ / 100.0) * z_base_tx;
+  }
+
+  std::complex<double> getPercentImpedance() const {
+    if (ratedPower_ <= 0.0) return {0.0, 0.0};
+
+    double basePower = BaseSystem::instance().getBasePower();
+    return percentImpedance_ * (basePower / ratedPower_);
   }
 
   std::pair<int, int> getConnectedBuses() const {
@@ -32,11 +44,9 @@ class Transformer {
 
  private:
   std::string name_;
-  int primaryBus_;
-  int secondaryBus_;
+  int primaryBus_, secondaryBus_;
   double ratedPower_;
-  double primaryVoltage_;
-  double secondaryVoltage_;
+  double primaryVoltage_, secondaryVoltage_;
   std::complex<double> percentImpedance_;
 };
 }  // namespace powersim::models

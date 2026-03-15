@@ -4,6 +4,8 @@
 #include <string>
 #include <utility>
 
+#include "BaseSystem.hpp"
+
 namespace powersim::models {
 
 class Line {
@@ -18,13 +20,15 @@ class Line {
         conductance_(conductance),
         capacitance_(capacitance) {}
 
-  std::complex<double> getImpedance(double frequency = 60.0) const {
-    double omega = 2.0 * std::numbers::pi * frequency;
+  std::complex<double> getImpedance() const {
+    double f = BaseSystem::instance().getFrequency();
+    double omega = 2.0 * std::numbers::pi * f;
     return {resistance_, omega * inductance_};
   }
 
-  std::complex<double> getAdmittance(double frequency = 60.0) const {
-    double omega = 2.0 * std::numbers::pi * frequency;
+  std::complex<double> getAdmittance() const {
+    double f = BaseSystem::instance().getFrequency();
+    double omega = 2.0 * std::numbers::pi * f;
     return {conductance_, omega * capacitance_};
   }
 

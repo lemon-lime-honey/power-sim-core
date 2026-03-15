@@ -4,8 +4,9 @@
 #include <numbers>
 #include <string>
 
-namespace powersim::models {
+#include "BaseSystem.hpp"
 
+namespace powersim::models {
 class PowerSource {
  public:
   PowerSource(std::string name, double nominalVoltage,
@@ -21,18 +22,18 @@ class PowerSource {
     return {v_phase * std::cos(radians), v_phase * std::sin(radians)};
   }
 
-  std::complex<double> getSourceImpedanceOhm() const {
-    if (shortCircuitCapacity_ <= 0.0) return {0.0, 0.0};
-
-    double z_mag = (nominalVoltage_ * nominalVoltage_) / shortCircuitCapacity_;
-    return {0.0, z_mag};
+  std::complex<double> getImpedance() const {
+    double value = BaseSystem::instance().getBaseImpedance(
+        nominalVoltage_, shortCircuitCapacity_);
+    return {0.0, value};
   }
 
-  std::complex<double> getPercentImpedance(double baseMVA) const {
+  std::complex<double> getPercentImpedance() const {
     if (shortCircuitCapacity_ <= 0.0) return {0.0, 0.0};
 
-    double percentZ = (baseMVA / shortCircuitCapacity_) * 100.0;
-    return {0.0, percentZ};
+    double base = BaseSystem::instance().getBasePower();
+    double value = (base / shortCircuitCapacity_) * 100.0;
+    return {0.0, value};
   }
 
   std::string getName() const { return name_; }
