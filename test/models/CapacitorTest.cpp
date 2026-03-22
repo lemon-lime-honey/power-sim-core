@@ -29,7 +29,7 @@ TEST_F(CapacitorTest, HandlesZeroCapacity) {
 }
 
 TEST_F(CapacitorTest, VerifiesShuntConnection) {
-  auto nodes = shuntCap.getConnectedBuses();
-  EXPECT_EQ(nodes.first, 1);
-  EXPECT_EQ(nodes.second, 0);
+  auto buses = shuntCap.getConnectedBuses();
+  EXPECT_EQ(buses.first, 1);
+  EXPECT_EQ(buses.second, 0);
 }

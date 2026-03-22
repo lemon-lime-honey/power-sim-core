@@ -31,11 +31,11 @@ TEST_F(ReactorTest, CalculatesSeriesImpedanceCorrectly) {
 }
 
 TEST_F(ReactorTest, VerifiesTopology) {
-  auto shuntNodes = shuntReactor.getConnectedBuses();
-  EXPECT_EQ(shuntNodes.first, 1);
-  EXPECT_EQ(shuntNodes.second, 0);
+  auto shuntBuses = shuntReactor.getConnectedBuses();
+  EXPECT_EQ(shuntBuses.first, 1);
+  EXPECT_EQ(shuntBuses.second, 0);
 
-  auto seriesNodes = seriesReactor.getConnectedBuses();
-  EXPECT_EQ(seriesNodes.first, 2);
-  EXPECT_EQ(seriesNodes.second, 3);
+  auto seriesBuses = seriesReactor.getConnectedBuses();
+  EXPECT_EQ(seriesBuses.first, 2);
+  EXPECT_EQ(seriesBuses.second, 3);
 }

@@ -32,8 +32,8 @@ TEST_F(LineTest, CalculatesAdmittanceUsingSystemFrequency) {
   EXPECT_NEAR(y.imag(), expected_b, 1e-9);
 }
 
-TEST_F(LineTest, ReturnsCorrectConnectedNodes) {
-  auto buses = testLine.getConnectedNodes();
+TEST_F(LineTest, ReturnsCorrectConnectedBuses) {
+  auto buses = testLine.getConnectedBuses();
   EXPECT_EQ(buses.first, 1);
   EXPECT_EQ(buses.second, 2);
 }
