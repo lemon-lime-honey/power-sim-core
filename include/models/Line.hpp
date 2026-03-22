@@ -32,7 +32,7 @@ class Line {
     return {conductance_, omega * capacitance_};
   }
 
-  std::pair<int, int> getConnectedNodes() const { return {fromBus_, toBus_}; }
+  std::pair<int, int> getConnectedBuses() const { return {fromBus_, toBus_}; }
   std::string getName() const { return name_; }
 
  private:

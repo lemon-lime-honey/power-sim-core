@@ -57,6 +57,6 @@ class PowerSystem {
   std::vector<Load> loads_;
 
   bool hasBus(int busId) const;
-  void validateNodes(int fromBus, int toBus) const;
+  void validateBuses(int fromBus, int toBus) const;
 };
 }  // namespace powersim::models

@@ -14,35 +14,35 @@ void PowerSystem::addBus(const Bus& bus) {
 }
 
 void PowerSystem::addLine(const Line& line) {
-  validateNodes(line.getConnectedNodes().first,
-                line.getConnectedNodes().second);
+  validateBuses(line.getConnectedBuses().first,
+                line.getConnectedBuses().second);
   lines_.push_back(line);
 }
 
 void PowerSystem::addTransformer(const Transformer& tx) {
-  validateNodes(tx.getConnectedBuses().first, tx.getConnectedBuses().second);
+  validateBuses(tx.getConnectedBuses().first, tx.getConnectedBuses().second);
   transformers_.push_back(tx);
 }
 
 void PowerSystem::addPowerSource(const PowerSource& source, int connectedBus) {
-  validateNodes(connectedBus, 0);
+  validateBuses(connectedBus, 0);
   powerSources_.push_back({source, connectedBus});
 }
 
 void PowerSystem::addReactor(const Reactor& reactor) {
-  validateNodes(reactor.getConnectedBuses().first,
+  validateBuses(reactor.getConnectedBuses().first,
                 reactor.getConnectedBuses().second);
   reactors_.push_back(reactor);
 }
 
 void PowerSystem::addCapacitor(const Capacitor& capacitor) {
-  validateNodes(capacitor.getConnectedBuses().first,
+  validateBuses(capacitor.getConnectedBuses().first,
                 capacitor.getConnectedBuses().second);
   capacitors_.push_back(capacitor);
 }
 
 void PowerSystem::addLoad(const Load& load) {
-  validateNodes(load.getConnectedBus(), 0);
+  validateBuses(load.getConnectedBus(), 0);
   loads_.push_back(load);
 }
 
@@ -50,29 +50,29 @@ ConnectedEquipment PowerSystem::getConnectedEquipment(int busId) const {
   ConnectedEquipment eq;
 
   for (const auto& line : lines_) {
-    auto nodes = line.getConnectedNodes();
-    if (nodes.first == busId || nodes.second == busId) {
+    auto Buses = line.getConnectedBuses();
+    if (Buses.first == busId || Buses.second == busId) {
       eq.lines.push_back(&line);
     }
   }
 
   for (const auto& transformer : transformers_) {
-    auto nodes = transformer.getConnectedBuses();
-    if (nodes.first == busId || nodes.second == busId) {
+    auto Buses = transformer.getConnectedBuses();
+    if (Buses.first == busId || Buses.second == busId) {
       eq.transformers.push_back(&transformer);
     }
   }
 
   for (const auto& reactor : reactors_) {
-    auto nodes = reactor.getConnectedBuses();
-    if (nodes.first == busId || nodes.second == busId) {
+    auto Buses = reactor.getConnectedBuses();
+    if (Buses.first == busId || Buses.second == busId) {
       eq.reactors.push_back(&reactor);
     }
   }
 
   for (const auto& cap : capacitors_) {
-    auto nodes = cap.getConnectedBuses();
-    if (nodes.first == busId || nodes.second == busId) {
+    auto Buses = cap.getConnectedBuses();
+    if (Buses.first == busId || Buses.second == busId) {
       eq.capacitors.push_back(&cap);
     }
   }
@@ -97,15 +97,15 @@ bool PowerSystem::hasBus(int busId) const {
                      [busId](const Bus& b) { return b.getId() == busId; });
 }
 
-void PowerSystem::validateNodes(int fromBus, int toBus) const {
-  auto checkNode = [this](int nodeId) {
-    if (nodeId == 0) return;
-    if (!hasBus(nodeId)) {
-      throw std::invalid_argument("Node validation failed: Bus ID " +
-                                  std::to_string(nodeId) + " not found.");
+void PowerSystem::validateBuses(int fromBus, int toBus) const {
+  auto checkBus = [this](int BusId) {
+    if (BusId == 0) return;
+    if (!hasBus(BusId)) {
+      throw std::invalid_argument("Bus validation failed: Bus ID " +
+                                  std::to_string(BusId) + " not found.");
     }
   };
-  checkNode(fromBus);
-  checkNode(toBus);
+  checkBus(fromBus);
+  checkBus(toBus);
 }
 }  // namespace powersim::models
