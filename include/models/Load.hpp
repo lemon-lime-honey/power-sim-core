@@ -9,13 +9,15 @@ enum class LoadType { General, Motor };
 
 class Load {
  public:
-  Load(std::string name, double activePower, double reactivePower,
-       LoadType type = LoadType::General)
+  Load(std::string name, int connectedBus, double activePower,
+       double reactivePower, LoadType type = LoadType::General)
       : name_(std::move(name)),
+        connectedBus_(connectedBus),
         activePower_(activePower),
         reactivePower_(reactivePower),
         type_(type) {}
 
+  int getConnectedBus() const { return connectedBus_; }
   double getActivePower() const { return activePower_; }
   double getReactivePower() const { return reactivePower_; }
 
@@ -34,11 +36,11 @@ class Load {
   }
 
   LoadType getType() const { return type_; }
-
   std::string getName() const { return name_; }
 
  private:
   std::string name_;
+  int connectedBus_;
   double activePower_;
   double reactivePower_;
   LoadType type_;
