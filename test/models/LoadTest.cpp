@@ -8,8 +8,8 @@ using namespace powersim::models;
 
 class LoadTest : public ::testing::Test {
  protected:
-  Load typicalLoad{"Motor_A", 80.0, 60.0, LoadType::Motor};
-  Load resistiveLoad{"Heater_A", 100.0, 0.0, LoadType::General};
+  Load typicalLoad{"Motor_A", 1, 80.0, 60.0, LoadType::Motor};
+  Load resistiveLoad{"Heater_A", 2, 100.0, 0.0, LoadType::General};
 };
 
 TEST_F(LoadTest, CalculatesApparentPowerCorrectly) {
@@ -29,7 +29,12 @@ TEST_F(LoadTest, ReturnsComplexPower) {
 }
 
 TEST_F(LoadTest, HandlesZeroLoad) {
-  Load zeroLoad{"Empty", 0.0, 0.0};
+  Load zeroLoad{"Empty", 3, 0.0, 0.0};
   EXPECT_DOUBLE_EQ(zeroLoad.getApparentPower(), 0.0);
   EXPECT_DOUBLE_EQ(zeroLoad.getPowerFactor(), 1.0);
+}
+
+TEST_F(LoadTest, ReturnsConnectedBus) {
+  EXPECT_EQ(typicalLoad.getConnectedBus(), 1);
+  EXPECT_EQ(resistiveLoad.getConnectedBus(), 2);
 }
