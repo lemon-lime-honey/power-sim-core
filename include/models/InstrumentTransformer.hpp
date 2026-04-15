@@ -14,10 +14,6 @@ class InstrumentTransformer {
 
   double getRatio() const { return primaryValue_ / secondaryValue_; }
 
-  double getSecondaryValue(double measuredPrimary) const {
-    return measuredPrimary / getRatio();
-  }
-
   std::string getName() const { return name_; }
   double getPrimaryValue() const { return primaryValue_; }
   double getSecondaryValueRated() const { return secondaryValue_; }
