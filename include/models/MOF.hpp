@@ -5,11 +5,11 @@
 #include "PT.hpp"
 
 namespace powersim::models {
+
 class MOF {
  public:
-  MOF(std::string name, double ptPrimaryVoltage,
-      double ptSecondaryVoltage = 110.0, double ctPrimaryCurrent,
-      double ctSecondaryCurrent = 5.0)
+  MOF(std::string name, double ptPrimaryVoltage, double ctPrimaryCurrent,
+      double ptSecondaryVoltage = 110.0, double ctSecondaryCurrent = 5.0)
       : name_(std::move(name)),
         pt_(name_ + "_PT", ptPrimaryVoltage, ptSecondaryVoltage),
         ct_(name_ + "_CT", ctPrimaryCurrent, ctSecondaryCurrent) {}
