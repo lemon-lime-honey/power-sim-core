@@ -64,6 +64,19 @@ class PowerSystem {
       const std::string& name) const;
   std::shared_ptr<Relay> getRelay(const std::string& name) const;
 
+  const std::map<int, std::shared_ptr<Bus>>& getBuses() const { return buses_; }
+  const std::map<std::string, std::shared_ptr<Line>>& getLines() const {
+    return lines_;
+  }
+  const std::map<std::string, std::shared_ptr<Transformer>>& getTransformers()
+      const {
+    return transformers_;
+  }
+  const std::map<std::string, std::pair<std::shared_ptr<PowerSource>, int>>&
+  getPowerSources() const {
+    return powerSources_;
+  }
+
   ConnectedEquipment getConnectedEquipment(int busId) const;
 
  private:
