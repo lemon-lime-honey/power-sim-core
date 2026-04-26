@@ -24,7 +24,7 @@ TEST_F(YBusBuilderTest, BuildsCorrectYBusForSimpleSystem) {
   auto source = std::make_shared<PowerSource>("Source", 22.9, 1000.0);
   sys.addPowerSource(source, 1);
 
-  auto line = std::make_shared<Line>("Line1", 1, 2, 0.05,
+  auto line = std::make_shared<Line>("Line1", 1, 2, 22.9, 0.05,
                                      0.1 / (2 * 3.14159 * 60), 0.0, 0.0);
   sys.addLine(line);
 
