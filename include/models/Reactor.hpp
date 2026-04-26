@@ -23,10 +23,9 @@ class Reactor {
 
   std::complex<double> getImpedance() const {
     if (ratedCapacity_ <= 0.0) return {0.0, 0.0};
-
-    double magnitude = BaseSystem::instance().getBaseImpedance(nominalVoltage_,
-                                                               ratedCapacity_);
-    return {0.0, magnitude};
+    double pu_reactance =
+        BaseSystem::instance().getBasePower() / ratedCapacity_;
+    return {0.0, pu_reactance};
   }
 
   std::pair<int, int> getConnectedBuses() const { return {fromBus_, toBus_}; }

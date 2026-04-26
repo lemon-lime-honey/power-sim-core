@@ -22,16 +22,8 @@ class Transformer {
 
   std::complex<double> getImpedance() const {
     if (ratedPower_ <= 0.0) return {0.0, 0.0};
-    double z_base_tx =
-        BaseSystem::instance().getBaseImpedance(primaryVoltage_, ratedPower_);
-    return (percentImpedance_ / 100.0) * z_base_tx;
-  }
-
-  std::complex<double> getPercentImpedance() const {
-    if (ratedPower_ <= 0.0) return {0.0, 0.0};
-
-    double basePower = BaseSystem::instance().getBasePower();
-    return percentImpedance_ * (basePower / ratedPower_);
+    double sysBase = BaseSystem::instance().getBasePower();
+    return (percentImpedance_ / 100.0) * (sysBase / ratedPower_);
   }
 
   std::pair<int, int> getConnectedBuses() const {

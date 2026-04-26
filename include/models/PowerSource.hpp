@@ -23,17 +23,10 @@ class PowerSource {
   }
 
   std::complex<double> getImpedance() const {
-    double value = BaseSystem::instance().getBaseImpedance(
-        nominalVoltage_, shortCircuitCapacity_);
-    return {0.0, value};
-  }
-
-  std::complex<double> getPercentImpedance() const {
     if (shortCircuitCapacity_ <= 0.0) return {0.0, 0.0};
-
-    double base = BaseSystem::instance().getBasePower();
-    double value = (base / shortCircuitCapacity_) * 100.0;
-    return {0.0, value};
+    double pu_reactance =
+        BaseSystem::instance().getBasePower() / shortCircuitCapacity_;
+    return {0.0, pu_reactance};
   }
 
   std::string getName() const { return name_; }

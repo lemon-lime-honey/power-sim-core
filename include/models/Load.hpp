@@ -18,21 +18,28 @@ class Load {
         type_(type) {}
 
   int getConnectedBus() const { return connectedBus_; }
-  double getActivePower() const { return activePower_; }
-  double getReactivePower() const { return reactivePower_; }
+
+  double getActivePower() const {
+    return activePower_ / BaseSystem::instance().getBasePower();
+  }
+
+  double getReactivePower() const {
+    return reactivePower_ / BaseSystem::instance().getBasePower();
+  }
 
   std::complex<double> getComplexPower() const {
-    return {activePower_, reactivePower_};
+    return {getActivePower(), getReactivePower()};
   }
 
   double getApparentPower() const {
-    return std::sqrt(activePower_ * activePower_ +
-                     reactivePower_ * reactivePower_);
+    double p = getActivePower();
+    double q = getReactivePower();
+    return std::sqrt(p * p + q * q);
   }
 
   double getPowerFactor() const {
     double s = getApparentPower();
-    return (s == 0.0) ? 1.0 : (activePower_ / s);
+    return (s == 0.0) ? 1.0 : (getActivePower() / s);
   }
 
   LoadType getType() const { return type_; }

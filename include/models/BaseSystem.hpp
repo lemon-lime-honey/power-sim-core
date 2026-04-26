@@ -8,21 +8,17 @@ class BaseSystem {
     return instance_;
   }
 
-  void setBase(double frequency, double basePower) {
+  void setBase(double frequency, double basePower_MVA) {
     frequency_ = frequency;
-    basePower_ = basePower;
+    basePower_ = basePower_MVA;
   }
 
   double getFrequency() const { return frequency_; }
   double getBasePower() const { return basePower_; }
 
-  double getBaseImpedance(double nominalVoltage) const {
-    return getBaseImpedance(nominalVoltage, basePower_);
-  }
-
-  double getBaseImpedance(double voltage, double power) const {
-    if (power <= 0.0) return 0.0;
-    return (10.0 * voltage * voltage) / power;
+  double getBaseImpedance(double nominalVoltage_kV) const {
+    if (basePower_ <= 0.0) return 0.0;
+    return (nominalVoltage_kV * nominalVoltage_kV) / basePower_;
   }
 
  private:
