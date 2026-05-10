@@ -63,6 +63,9 @@ class PowerSystem {
   std::shared_ptr<CircuitBreaker> getCircuitBreaker(
       const std::string& name) const;
   std::shared_ptr<Relay> getRelay(const std::string& name) const;
+  std::shared_ptr<CT> getCT(const std::string& name) const;
+  std::pair<std::string, std::string> getProtectionLink(
+      const std::string& relayName) const;
 
   const std::map<int, std::shared_ptr<Bus>>& getBuses() const { return buses_; }
   const std::map<std::string, std::shared_ptr<Line>>& getLines() const {

@@ -114,6 +114,20 @@ std::shared_ptr<Relay> PowerSystem::getRelay(const std::string& name) const {
   return it != relays_.end() ? it->second : nullptr;
 }
 
+std::shared_ptr<CT> PowerSystem::getCT(const std::string& name) const {
+  auto it = cts_.find(name);
+  return it != cts_.end() ? it->second : nullptr;
+}
+
+std::pair<std::string, std::string> PowerSystem::getProtectionLink(
+    const std::string& relayName) const {
+  auto it = protectionMapping_.find(relayName);
+  if (it == protectionMapping_.end()) {
+    throw std::invalid_argument("Relay protection link not found.");
+  }
+  return {it->second.ctName, it->second.cbName};
+}
+
 ConnectedEquipment PowerSystem::getConnectedEquipment(int busId) const {
   ConnectedEquipment eq;
   if (!hasBus(busId)) return eq;
