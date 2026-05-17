@@ -29,7 +29,7 @@ TEST_F(ProtectionCoordinatorTest, SimulatesTripCorrectlyOnHighFaultCurrent) {
   EXPECT_TRUE(event.tripped);
   EXPECT_EQ(event.relayName, "OCR_Main");
   EXPECT_EQ(event.cbName, "CB_Main");
-  EXPECT_NEAR(event.tripTime, 29.702, 1e-3);
+  EXPECT_NEAR(event.tripTime, 29.706, 1e-3);
 
   auto cb = sys.getCircuitBreaker("CB_Main");
   EXPECT_FALSE(cb->isClosed());

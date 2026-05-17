@@ -21,11 +21,13 @@ class YBusBuilderTest : public ::testing::Test {
 };
 
 TEST_F(YBusBuilderTest, BuildsCorrectYBusForSimpleSystem) {
-  auto source = std::make_shared<PowerSource>("Source", 22.9, 1000.0);
+  auto source =
+      std::make_shared<PowerSource>("Source", 22.9, 1000.0, 1000.0, 1000.0);
   sys.addPowerSource(source, 1);
 
-  auto line = std::make_shared<Line>("Line1", 1, 2, 22.9, 0.05,
-                                     0.1 / (2 * 3.14159 * 60), 0.0, 0.0);
+  auto line = std::make_shared<Line>(
+      "Line1", 1, 2, 22.9, 0.05, 0.1 / (2.0 * std::numbers::pi * 60.0), 0.0,
+      0.0, 0.15, 0.3 / (2.0 * std::numbers::pi * 60.0), 0.0, 0.0);
   sys.addLine(line);
 
   auto ybus = YBusBuilder::build(sys);

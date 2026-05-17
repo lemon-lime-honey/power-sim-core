@@ -11,8 +11,8 @@ using namespace powersim::models;
 class PowerSourceTest : public ::testing::Test {
  protected:
   void SetUp() override { BaseSystem::instance().setBase(60.0, 100.0); }
-  PowerSource gridSource{"KEPCO_154kV", 154.0, 1000.0, 30.0};
-  PowerSource infiniteBus{"Infinite_Bus", 22.9, 0.0, 0.0};
+  PowerSource gridSource{"KEPCO_154kV", 154.0, 1000.0, 1000.0, 1000.0};
+  PowerSource infiniteBus{"Infinite_Bus", 22.9, 0.0, 0.0, 0.0};
 };
 
 TEST_F(PowerSourceTest, CalculatesImpedancePU) {

@@ -6,14 +6,15 @@
 
 #include "core/math/ComplexMatrix.hpp"
 #include "models/PowerSystem.hpp"
+#include "models/SequenceType.hpp"
 
 namespace powersim::core::analysis {
-using namespace powersim::models;
-using namespace powersim::core::math;
 
 class YBusBuilder {
  public:
-  static ComplexMatrix build(const PowerSystem& system) {
+  static math::ComplexMatrix build(
+      const models::PowerSystem& system,
+      models::SequenceType type = models::SequenceType::Positive) {
     const auto& buses = system.getBuses();
     size_t n = buses.size();
 
@@ -23,14 +24,14 @@ class YBusBuilder {
       busIdxMap[busId] = idx++;
     }
 
-    ComplexMatrix ybus(n, n);
+    math::ComplexMatrix ybus(n, n);
 
     for (const auto& [name, line] : system.getLines()) {
       auto [from, to] = line->getConnectedBuses();
       size_t i = busIdxMap[from];
       size_t j = busIdxMap[to];
 
-      std::complex<double> y = 1.0 / line->getImpedance();
+      std::complex<double> y = 1.0 / line->getImpedance(type);
 
       ybus(i, i) += y;
       ybus(j, j) += y;
@@ -43,8 +44,7 @@ class YBusBuilder {
       size_t i = busIdxMap[p];
       size_t j = busIdxMap[s];
 
-      std::complex<double> y = 1.0 / tx->getImpedance();
-
+      std::complex<double> y = 1.0 / tx->getImpedance(type);
       ybus(i, i) += y;
       ybus(j, j) += y;
       ybus(i, j) -= y;
@@ -56,7 +56,7 @@ class YBusBuilder {
       int busId = sourcePair.second;
       size_t i = busIdxMap[busId];
 
-      std::complex<double> y = 1.0 / source->getImpedance();
+      std::complex<double> y = 1.0 / source->getImpedance(type);
       ybus(i, i) += y;
     }
 

@@ -3,42 +3,53 @@
 #include <string>
 #include <utility>
 
-#include "BaseSystem.hpp"
+#include "models/BaseSystem.hpp"
+#include "models/SequenceType.hpp"
 
 namespace powersim::models {
-
 class Transformer {
  public:
   Transformer(std::string name, int primaryBus, int secondaryBus,
               double ratedPower, double primaryVoltage, double secondaryVoltage,
-              std::complex<double> percentImpedance)
+              std::complex<double> positiveImpedance,
+              std::complex<double> zeroImpedance)
       : name_(std::move(name)),
         primaryBus_(primaryBus),
         secondaryBus_(secondaryBus),
         ratedPower_(ratedPower),
         primaryVoltage_(primaryVoltage),
         secondaryVoltage_(secondaryVoltage),
-        percentImpedance_(percentImpedance) {}
+        positiveImpedance_(positiveImpedance),
+        zeroImpedance_(zeroImpedance) {}
 
-  std::complex<double> getImpedance() const {
-    if (ratedPower_ <= 0.0) return {0.0, 0.0};
-    double sysBase = BaseSystem::instance().getBasePower();
-    return (percentImpedance_ / 100.0) * (sysBase / ratedPower_);
-  }
-
+  std::string getName() const { return name_; }
   std::pair<int, int> getConnectedBuses() const {
     return {primaryBus_, secondaryBus_};
   }
-  std::string getName() const { return name_; }
-  double getRatedPower() const { return ratedPower_; }
-  double getPrimaryVoltage() const { return primaryVoltage_; }
-  double getSecondaryVoltage() const { return secondaryVoltage_; }
+
+  std::complex<double> getImpedance(
+      SequenceType type = SequenceType::Positive) const {
+    if (ratedPower_ <= 0.0) return {0.0, 0.0};
+
+    std::complex<double> targetImpedance =
+        (type == SequenceType::Zero) ? zeroImpedance_ : positiveImpedance_;
+    double basePower = BaseSystem::instance().getBasePower();
+
+    return targetImpedance * (basePower / ratedPower_);
+  }
+
+  std::complex<double> getAdmittance(
+      SequenceType type = SequenceType::Positive) const {
+    std::complex<double> impedance = getImpedance(type);
+    if (std::abs(impedance) < 1e-12) return {0.0, 0.0};
+    return 1.0 / impedance;
+  }
 
  private:
   std::string name_;
   int primaryBus_, secondaryBus_;
-  double ratedPower_;
-  double primaryVoltage_, secondaryVoltage_;
-  std::complex<double> percentImpedance_;
+  double ratedPower_, primaryVoltage_, secondaryVoltage_;
+  std::complex<double> positiveImpedance_;
+  std::complex<double> zeroImpedance_;
 };
 }  // namespace powersim::models

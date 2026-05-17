@@ -10,7 +10,8 @@ using namespace powersim::models;
 class LineTest : public ::testing::Test {
  protected:
   void SetUp() override { BaseSystem::instance().setBase(60.0, 100.0); }
-  Line testLine{"TL_01", 1, 2, 154.0, 0.1, 0.01, 0.0, 1e-6};
+  Line testLine{"TL_01", 1,    2,   154.0, 0.1, 0.01,
+                0.0,     1e-6, 0.3, 0.03,  0.0, 3e-6};
 };
 
 TEST_F(LineTest, CalculatesImpedancePU) {

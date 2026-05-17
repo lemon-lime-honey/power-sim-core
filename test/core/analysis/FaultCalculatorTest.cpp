@@ -22,15 +22,16 @@ class FaultCalculatorTest : public ::testing::Test {
     sys.addBus(std::make_shared<Bus>(1, "Main_Bus", 22.9));
     sys.addBus(std::make_shared<Bus>(2, "Load_Bus", 22.9));
 
-    auto source = std::make_shared<PowerSource>("KEPCO", 22.9, 1000.0);
+    auto source =
+        std::make_shared<PowerSource>("KEPCO", 22.9, 1000.0, 1000.0, 1000.0);
     sys.addPowerSource(source, 1);
 
     double zBase = 22.9 * 22.9 / 100.0;
     double xOhm = 0.1 * zBase;
     double lHenry = xOhm / (2.0 * std::numbers::pi * 60.0);
 
-    auto line =
-        std::make_shared<Line>("Line1", 1, 2, 22.9, 0.0, lHenry, 0.0, 0.0);
+    auto line = std::make_shared<Line>("Line1", 1, 2, 22.9, 0.0, lHenry, 0.0,
+                                       0.0, 0.0, lHenry * 3.0, 0.0, 0.0);
     sys.addLine(line);
 
     sys.addCircuitBreaker(

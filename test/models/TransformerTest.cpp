@@ -10,7 +10,14 @@ using namespace powersim::models;
 class TransformerTest : public ::testing::Test {
  protected:
   void SetUp() override { BaseSystem::instance().setBase(60.0, 100.0); }
-  Transformer stepDownTx{"MTR_01", 1, 2, 60.0, 154.0, 22.9, {0.0, 10.0}};
+  Transformer stepDownTx{"MTR_01",
+                         1,
+                         2,
+                         60.0,
+                         154.0,
+                         22.9,
+                         std::complex<double>{0.0, 0.1},
+                         std::complex<double>{0.0, 0.1}};
 };
 
 TEST_F(TransformerTest, CalculatesImpedancePU) {
