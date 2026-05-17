@@ -5,14 +5,18 @@
 
 #include "models/BaseSystem.hpp"
 #include "models/SequenceType.hpp"
+#include "models/WindingConnection.hpp"
 
 namespace powersim::models {
 class Transformer {
  public:
-  Transformer(std::string name, int primaryBus, int secondaryBus,
-              double ratedPower, double primaryVoltage, double secondaryVoltage,
-              std::complex<double> positiveImpedance,
-              std::complex<double> zeroImpedance)
+  Transformer(
+      std::string name, int primaryBus, int secondaryBus, double ratedPower,
+      double primaryVoltage, double secondaryVoltage,
+      std::complex<double> positiveImpedance,
+      std::complex<double> zeroImpedance,
+      WindingConnection primaryConnection = WindingConnection::WyeGrounded,
+      WindingConnection secondaryConnection = WindingConnection::WyeGrounded)
       : name_(std::move(name)),
         primaryBus_(primaryBus),
         secondaryBus_(secondaryBus),
@@ -20,11 +24,18 @@ class Transformer {
         primaryVoltage_(primaryVoltage),
         secondaryVoltage_(secondaryVoltage),
         positiveImpedance_(positiveImpedance),
-        zeroImpedance_(zeroImpedance) {}
+        zeroImpedance_(zeroImpedance),
+        primaryConnection_(primaryConnection),
+        secondaryConnection_(secondaryConnection) {}
 
   std::string getName() const { return name_; }
   std::pair<int, int> getConnectedBuses() const {
     return {primaryBus_, secondaryBus_};
+  }
+
+  WindingConnection getPrimaryConnection() const { return primaryConnection_; }
+  WindingConnection getSecondaryConnection() const {
+    return secondaryConnection_;
   }
 
   std::complex<double> getImpedance(
@@ -51,5 +62,7 @@ class Transformer {
   double ratedPower_, primaryVoltage_, secondaryVoltage_;
   std::complex<double> positiveImpedance_;
   std::complex<double> zeroImpedance_;
+  WindingConnection primaryConnection_;
+  WindingConnection secondaryConnection_;
 };
 }  // namespace powersim::models
