@@ -23,5 +23,5 @@ class TransformerTest : public ::testing::Test {
 TEST_F(TransformerTest, CalculatesImpedancePU) {
   auto z = stepDownTx.getImpedance();
   EXPECT_DOUBLE_EQ(z.real(), 0.0);
-  EXPECT_NEAR(z.imag(), (10.0 / 100.0) * (100.0 / 60.0), 1e-9);
+  EXPECT_NEAR(z.imag(), 0.1 * (100.0 / 60.0), 1e-9);
 }

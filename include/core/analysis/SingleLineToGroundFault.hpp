@@ -6,8 +6,11 @@
 #include "core/analysis/FaultStrategy.hpp"
 #include "core/analysis/YBusBuilder.hpp"
 #include "models/BaseSystem.hpp"
+#include "models/SequenceType.hpp"
 
 namespace powersim::core::analysis {
+
+using namespace powersim::models;
 
 class SingleLineToGroundFault : public FaultStrategy {
  public:

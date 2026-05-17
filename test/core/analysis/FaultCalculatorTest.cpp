@@ -5,6 +5,8 @@
 #include <numbers>
 
 #include "core/analysis/FaultCalculator.hpp"
+#include "core/analysis/LineToLineFault.hpp"
+#include "core/analysis/SingleLineToGroundFault.hpp"
 #include "core/analysis/ThreePhaseFault.hpp"
 #include "models/BaseSystem.hpp"
 #include "models/PowerSystem.hpp"
@@ -72,4 +74,32 @@ TEST_F(FaultCalculatorTest, ThrowsExceptionForInvalidBus) {
   ThreePhaseFault fault3P;
   EXPECT_THROW(FaultCalculator::calculate(sys, 999, fault3P),
                std::invalid_argument);
+}
+
+TEST_F(FaultCalculatorTest, CalculatesLineToLineFault) {
+  LineToLineFault faultLL;
+  FaultReport report = FaultCalculator::calculate(sys, 2, faultLL);
+
+  double expectedZMag = 0.4;
+  double expectedCapacity = 100.0 * (std::sqrt(3.0) / expectedZMag);
+  double expectedCurrent = expectedCapacity / (std::sqrt(3.0) * 22.9);
+
+  EXPECT_EQ(report.faultBusId, 2);
+  EXPECT_NEAR(std::abs(report.theveninImpedance), expectedZMag, 1e-6);
+  EXPECT_NEAR(report.faultCapacity, expectedCapacity, 1e-4);
+  EXPECT_NEAR(report.faultCurrent, expectedCurrent, 1e-4);
+}
+
+TEST_F(FaultCalculatorTest, CalculatesSingleLineToGroundFault) {
+  SingleLineToGroundFault faultSLG;
+  FaultReport report = FaultCalculator::calculate(sys, 2, faultSLG);
+
+  double expectedZMag = 0.8;
+  double expectedCapacity = 100.0 * (3.0 / expectedZMag);
+  double expectedCurrent = expectedCapacity / (std::sqrt(3.0) * 22.9);
+
+  EXPECT_EQ(report.faultBusId, 2);
+  EXPECT_NEAR(std::abs(report.theveninImpedance), expectedZMag, 1e-6);
+  EXPECT_NEAR(report.faultCapacity, expectedCapacity, 1e-4);
+  EXPECT_NEAR(report.faultCurrent, expectedCurrent, 1e-4);
 }
